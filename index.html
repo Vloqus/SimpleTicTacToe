@@ -6,75 +6,88 @@
     <title>Tic-Tac-Toe</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
-            background-color: #0c2c4e;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: #ffffff;
             margin: 0;
             padding: 0;
         }
         h1 {
-            font-size: 2em;
+            font-size: 2.5em;
             margin-top: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
         }
         .board-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: calc(100vh - 150px);
         }
         .board {
             display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-gap: 5px;
-            width: 300px;
-            height: 300px;
-            border: 5px solid #ffffff;
-            border-radius: 10px;
-            background-color: #16408f;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            width: 320px;
+            height: 320px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
         .cell {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100px;
-            height: 100px;
-            font-size: 36px;
-            text-align: center;
-            border: 1px solid #1f305e;
+            font-size: 40px;
+            font-weight: bold;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
-            color: #ffffff;
+            color: rgba(255, 255, 255, 0.8);
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
         }
         .cell:hover {
-            background-color: #002f5e;
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         .cell:active {
-            background-color: #000c1e;
+            transform: scale(0.98);
         }
         .cell.X {
-            color: #ffffff;
+            color: #4caf50; /* Green for X */
+            text-shadow: 0 0 10px #4caf50;
         }
         .cell.O {
-            color: #ffffff;
+            color: #f44336; /* Red for O */
+            text-shadow: 0 0 10px #f44336;
         }
         .message {
             font-size: 1.5em;
-            margin-top: 10px;
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         button {
             font-size: 1.2em;
-            padding: 10px 20px;
-            background-color: #002f5e;
-            color: #ffffff;
+            padding: 10px 30px;
+            background: linear-gradient(135deg, #1f4037, #99f2c8);
+            color: #000;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 20px;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         }
         button:hover {
-            background-color: #16408f;
+            background: linear-gradient(135deg, #0f2027, #2c5364);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+        button:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
@@ -106,7 +119,6 @@
 
         const cells = document.querySelectorAll('.cell');
         const message = document.getElementById('message');
-        const boardElement = document.getElementById('board');
 
         function makeMove(row, col) {
             if (board[row][col] === '' && !checkWinner()) {
@@ -114,34 +126,24 @@
                 const cell = cells[row * 3 + col];
                 cell.textContent = currentPlayer;
                 cell.classList.add(currentPlayer);
-                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                message.textContent = `Player ${currentPlayer}'s turn`;
-
                 if (checkWinner()) {
-                    message.textContent = `Player ${currentPlayer === 'X' ? 'O' : 'X'} wins!`;
+                    message.textContent = `Player ${currentPlayer} wins!`;
+                } else if (board.flat().every(cell => cell !== '')) {
+                    message.textContent = "It's a draw!";
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    message.textContent = `Player ${currentPlayer}'s turn`;
                 }
             }
         }
 
         function checkWinner() {
             for (let i = 0; i < 3; i++) {
-                if (board[i][0] === board[i][1] && board[i][1] === board[i][2] && board[i][0] !== '') {
-                    return true;
-                }
-                if (board[0][i] === board[1][i] && board[1][i] === board[2][i] && board[0][i] !== '') {
-                    return true;
-                }
+                if (board[i][0] === board[i][1] && board[i][1] === board[i][2] && board[i][0] !== '') return true;
+                if (board[0][i] === board[1][i] && board[1][i] === board[2][i] && board[0][i] !== '') return true;
             }
-            if (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[0][0] !== '') {
-                return true;
-            }
-            if (board[0][2] === board[1][1] && board[1][1] === board[2][0] && board[0][2] !== '') {
-                return true;
-            }
-            if (board.flat().every(cell => cell !== '')) {
-                message.textContent = "It's a draw!";
-                return true;
-            }
+            if (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[0][0] !== '') return true;
+            if (board[0][2] === board[1][1] && board[1][1] === board[2][0] && board[0][2] !== '') return true;
             return false;
         }
 
@@ -159,9 +161,7 @@
             message.textContent = `Player ${currentPlayer}'s turn`;
         }
 
-        boardElement.style.pointerEvents = 'auto'; // Enable cell clicking
-        resetBoard(); // Initialize the game
-
+        resetBoard();
     </script>
 </body>
 </html>
