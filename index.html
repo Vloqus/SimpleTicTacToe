@@ -1,226 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic-Tac-Toe 2</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            font-size: 2.5em;
-            margin-top: 20px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
-        }
-        .board-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 150px);
-        }
-        .board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
-            width: 320px;
-            height: 320px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-        .cell {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            font-weight: bold;
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.8);
-            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
-        }
-        .cell:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-        .cell.X {
-            color: #4caf50; /* Green for X */
-            text-shadow: 0 0 10px #4caf50;
-        }
-        .cell.O {
-            color: #f44336; /* Red for O */
-            text-shadow: 0 0 10px #f44336;
-        }
-        .message {
-            font-size: 1.5em;
-            margin: 20px 0;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-        button {
-            font-size: 1.2em;
-            padding: 10px 30px;
-            background: linear-gradient(135deg, #1f4037, #99f2c8);
-            color: #000;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-        }
-        button:hover {
-            background: linear-gradient(135deg, #0f2027, #2c5364);
-            color: #fff;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-        button:active {
-            transform: scale(0.95);
-        }
-        /* Modal Styling */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-        .modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        .modal-content {
-            background: linear-gradient(135deg, #0f2027, #2c5364);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-            text-align: center;
-            animation: zoomIn 0.3s ease;
-        }
-        .modal-content h2 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-        .modal-content button {
-            font-size: 1em;
-            padding: 10px 20px;
-        }
-        @keyframes zoomIn {
-            from {
-                transform: scale(0.8);
-            }
-            to {
-                transform: scale(1);
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic-Tac-Toe</title>
+  <style>
+    :root {
+      --bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --modal-bg: linear-gradient(135deg, #0f2027, #2c5364);
+      --button-bg: linear-gradient(135deg, #1f4037, #99f2c8);
+      --button-hover-bg: linear-gradient(135deg, #0f2027, #2c5364);
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      text-align: center;
+      background: var(--bg);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-top: 20px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.7);
+    }
+    .board-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 150px);
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+      width: 320px;
+      height: 320px;
+      padding: 10px;
+      background: rgba(255,255,255,0.1);
+      border: 3px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+    }
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      color: rgba(255,255,255,0.9);
+    }
+    .cell:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    .cell:active {
+      background: rgba(255,255,255,0.25);
+    }
+    .cell.X {
+      color: #4caf50;
+    }
+    .cell.O {
+      color: #f44336;
+    }
+    .message {
+      font-size: 1.2rem;
+      margin: 20px 0;
+    }
+    button {
+      font-size: 1rem;
+      padding: 10px 20px;
+      background: var(--button-bg);
+      color: #000;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: var(--button-hover-bg);
+      color: #fff;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-content {
+      background: var(--modal-bg);
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+      color: #fff;
+    }
+    .settings-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--button-bg);
+      color: #000;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    .settings-btn:hover {
+      background: var(--button-hover-bg);
+      color: #fff;
+    }
+    .settings-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .settings-modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .settings-content {
+      background: var(--modal-bg);
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+      color: #fff;
+    }
+    .theme-option {
+      display: block;
+      margin: 10px 0;
+      font-size: 1rem;
+      padding: 8px 16px;
+      background: var(--button-bg);
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    .theme-option:hover {
+      background: var(--button-hover-bg);
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
-    <h1>Tic-Tac-Toe</h1>
-    <div class="board-container">
-        <div class="board" id="board">
-            <div class="cell" onclick="makeMove(0, 0)"></div>
-            <div class="cell" onclick="makeMove(0, 1)"></div>
-            <div class="cell" onclick="makeMove(0, 2)"></div>
-            <div class="cell" onclick="makeMove(1, 0)"></div>
-            <div class="cell" onclick="makeMove(1, 1)"></div>
-            <div class="cell" onclick="makeMove(1, 2)"></div>
-            <div class="cell" onclick="makeMove(2, 0)"></div>
-            <div class="cell" onclick="makeMove(2, 1)"></div>
-            <div class="cell" onclick="makeMove(2, 2)"></div>
-        </div>
+  <h1>Tic-Tac-Toe</h1>
+  <div class="board-container">
+    <div class="board" id="board">
+      <div class="cell" onclick="makeMove(0, 0)"></div>
+      <div class="cell" onclick="makeMove(0, 1)"></div>
+      <div class="cell" onclick="makeMove(0, 2)"></div>
+      <div class="cell" onclick="makeMove(1, 0)"></div>
+      <div class="cell" onclick="makeMove(1, 1)"></div>
+      <div class="cell" onclick="makeMove(1, 2)"></div>
+      <div class="cell" onclick="makeMove(2, 0)"></div>
+      <div class="cell" onclick="makeMove(2, 1)"></div>
+      <div class="cell" onclick="makeMove(2, 2)"></div>
     </div>
-    <p class="message" id="message"></p>
-
-    <!-- Modal for Win Announcement -->
-    <div class="modal" id="winModal">
-        <div class="modal-content">
-            <h2 id="winnerMessage"></h2>
-            <button onclick="resetBoard()">Restart Game</button>
-        </div>
+  </div>
+  <p class="message" id="message">Player X's turn</p>
+  <div class="modal" id="winModal">
+    <div class="modal-content">
+      <h2 id="winnerMessage"></h2>
+      <button onclick="resetBoard()">Restart Game</button>
     </div>
-
-    <script>
-        let currentPlayer = 'X';
-        let board = [
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', '']
-        ];
-
-        const cells = document.querySelectorAll('.cell');
-        const message = document.getElementById('message');
-        const winModal = document.getElementById('winModal');
-        const winnerMessage = document.getElementById('winnerMessage');
-
-        function makeMove(row, col) {
-            if (board[row][col] === '' && !checkWinner()) {
-                board[row][col] = currentPlayer;
-                const cell = cells[row * 3 + col];
-                cell.textContent = currentPlayer;
-                cell.classList.add(currentPlayer);
-                if (checkWinner()) {
-                    winnerMessage.textContent = `Player ${currentPlayer} wins! 🎉`;
-                    showModal();
-                } else if (board.flat().every(cell => cell !== '')) {
-                    winnerMessage.textContent = "It's a draw! 🤝";
-                    showModal();
-                } else {
-                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                    message.textContent = `Player ${currentPlayer}'s turn`;
-                }
-            }
+  </div>
+  <button class="settings-btn" onclick="toggleSettings()">Settings</button>
+  <div class="settings-modal" id="settingsModal">
+    <div class="settings-content">
+      <h2>Choose Theme</h2>
+      <button class="theme-option" onclick="setTheme('default')">Default</button>
+      <button class="theme-option" onclick="setTheme('dark')">Dark</button>
+      <button class="theme-option" onclick="setTheme('blue')">Blue</button>
+      <button class="theme-option" onclick="setTheme('sunset')">Sunset</button>
+      <button class="theme-option" onclick="setTheme('matrix')">Matrix</button>
+      <button class="theme-option" onclick="setTheme('pink')">Pink</button>
+      <button class="theme-option" onclick="setTheme('ocean')">Ocean</button>
+      <br />
+      <button class="theme-option" onclick="toggleSettings()">Close</button>
+    </div>
+  </div>
+  <script>
+    let currentPlayer = 'X';
+    let board = [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', '']
+    ];
+    const cells = document.querySelectorAll('.cell');
+    const message = document.getElementById('message');
+    const winModal = document.getElementById('winModal');
+    const winnerMessage = document.getElementById('winnerMessage');
+    const settingsModal = document.getElementById('settingsModal');
+    function makeMove(row, col) {
+      if (board[row][col] === '' && !checkWinner()) {
+        board[row][col] = currentPlayer;
+        const cell = cells[row * 3 + col];
+        cell.textContent = currentPlayer;
+        cell.classList.add(currentPlayer);
+        if (checkWinner()) {
+          winnerMessage.textContent = `Player ${currentPlayer} wins!`;
+          showModal();
+        } else if (board.flat().every(cell => cell !== '')) {
+          winnerMessage.textContent = "It's a draw!";
+          showModal();
+        } else {
+          currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          message.textContent = `Player ${currentPlayer}'s turn`;
         }
-
-        function checkWinner() {
-            for (let i = 0; i < 3; i++) {
-                if (board[i][0] === board[i][1] && board[i][1] === board[i][2] && board[i][0] !== '') return true;
-                if (board[0][i] === board[1][i] && board[1][i] === board[2][i] && board[0][i] !== '') return true;
-            }
-            if (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[0][0] !== '') return true;
-            if (board[0][2] === board[1][1] && board[1][1] === board[2][0] && board[0][2] !== '') return true;
-            return false;
-        }
-
-        function resetBoard() {
-            currentPlayer = 'X';
-            board = [
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', '']
-            ];
-            cells.forEach(cell => {
-                cell.textContent = '';
-                cell.classList.remove('X', 'O');
-            });
-            message.textContent = `Player ${currentPlayer}'s turn`;
-            hideModal();
-        }
-
-        function showModal() {
-            winModal.classList.add('active');
-        }
-
-        function hideModal() {
-            winModal.classList.remove('active');
-        }
-    </script>
+      }
+    }
+    function checkWinner() {
+      for (let i = 0; i < 3; i++) {
+        if (board[i][0] && board[i][0] === board[i][1] && board[i][1] === board[i][2]) return true;
+        if (board[0][i] && board[0][i] === board[1][i] && board[1][i] === board[2][i]) return true;
+      }
+      if (board[0][0] && board[0][0] === board[1][1] && board[1][1] === board[2][2]) return true;
+      if (board[0][2] && board[0][2] === board[1][1] && board[1][1] === board[2][0]) return true;
+      return false;
+    }
+    function resetBoard() {
+      currentPlayer = 'X';
+      board = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+      ];
+      cells.forEach(cell => {
+        cell.textContent = '';
+        cell.classList.remove('X', 'O');
+      });
+      message.textContent = `Player ${currentPlayer}'s turn`;
+      hideModal();
+    }
+    function showModal() {
+      winModal.classList.add('active');
+    }
+    function hideModal() {
+      winModal.classList.remove('active');
+    }
+    function toggleSettings() {
+      settingsModal.classList.toggle('active');
+    }
+    function setTheme(theme) {
+      const root = document.documentElement;
+      if (theme === 'default') {
+        root.style.setProperty('--bg', 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)');
+        root.style.setProperty('--modal-bg', 'linear-gradient(135deg, #0f2027, #2c5364)');
+        root.style.setProperty('--button-bg', 'linear-gradient(135deg, #1f4037, #99f2c8)');
+        root.style.setProperty('--button-hover-bg', 'linear-gradient(135deg, #0f2027, #2c5364)');
+      } else if (theme === 'dark') {
+        root.style.setProperty('--bg', '#1e1e1e');
+        root.style.setProperty('--modal-bg', '#2e2e2e');
+        root.style.setProperty('--button-bg', '#3a3a3a');
+        root.style.setProperty('--button-hover-bg', '#4a4a4a');
+      } else if (theme === 'blue') {
+        root.style.setProperty('--bg', 'linear-gradient(135deg, #2b5876, #4e4376)');
+        root.style.setProperty('--modal-bg', 'linear-gradient(135deg, #2b5876, #4e4376)');
+        root.style.setProperty('--button-bg', 'linear-gradient(135deg, #1e3c72, #2a5298)');
+        root.style.setProperty('--button-hover-bg', 'linear-gradient(135deg, #1e3c72, #2a5298)');
+      } else if (theme === 'sunset') {
+        root.style.setProperty('--bg', 'linear-gradient(135deg, #ff5f6d, #ffc371)');
+        root.style.setProperty('--modal-bg', 'linear-gradient(135deg, #ff5f6d, #ffc371)');
+        root.style.setProperty('--button-bg', 'linear-gradient(135deg, #ff9966, #ff5e62)');
+        root.style.setProperty('--button-hover-bg', 'linear-gradient(135deg, #ff5e62, #ff9966)');
+      } else if (theme === 'matrix') {
+        root.style.setProperty('--bg', 'linear-gradient(135deg, #000000, #0f0f0f)');
+        root.style.setProperty('--modal-bg', '#1a1a1a');
+        root.style.setProperty('--button-bg', 'linear-gradient(135deg, #0f0, #090)');
+        root.style.setProperty('--button-hover-bg', 'linear-gradient(135deg, #0c0, #060)');
+      } else if (theme === 'pink') {
+        root.style.setProperty('--bg', 'linear-gradient(135deg, #f78ca0, #f9748f)');
+        root.style.setProperty('--modal-bg', 'linear-gradient(135deg, #f78ca0, #f9748f)');
+        root.style.setProperty('--button-bg', 'linear-gradient(135deg, #ffb6c1, #ff69b4)');
+        root.style.setProperty('--button-hover-bg', 'linear-gradient(135deg, #ff69b4, #ffb6c1)');
+      } else if (theme === 'ocean') {
+        root.style.setProperty('--bg', 'linear-gradient(135deg, #2E3192, #1BFFFF)');
+        root.style.setProperty('--modal-bg', 'linear-gradient(135deg, #1BFFFF, #2E3192)');
+        root.style.setProperty('--button-bg', 'linear-gradient(135deg, #4CB8C4, #3CD3AD)');
+        root.style.setProperty('--button-hover-bg', 'linear-gradient(135deg, #3CD3AD, #4CB8C4)');
+      }
+      toggleSettings();
+    }
+  </script>
 </body>
 </html>
